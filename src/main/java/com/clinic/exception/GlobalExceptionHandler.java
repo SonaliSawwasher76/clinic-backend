@@ -1,6 +1,7 @@
 package com.clinic.exception;
 
 import com.clinic.entity.ExceptionLog;
+import com.clinic.service.AuditLogService;
 import com.clinic.repository.ExceptionLogRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.*;
@@ -15,9 +16,11 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     private final ExceptionLogRepository exceptionLogRepository;
+    private final AuditLogService auditLogService;
 
-    public GlobalExceptionHandler(ExceptionLogRepository exceptionLogRepository) {
+    public GlobalExceptionHandler(ExceptionLogRepository exceptionLogRepository, AuditLogService auditLogService) {
         this.exceptionLogRepository = exceptionLogRepository;
+        this.auditLogService = auditLogService;
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -51,22 +54,31 @@ public class GlobalExceptionHandler {
     }
 
     private ResponseEntity<ErrorResponse> buildResponse(Exception ex, HttpStatus status, HttpServletRequest request) {
+        LocalDateTime now = LocalDateTime.now();
+
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
+                .timestamp(now)
                 .status(status.value())
                 .error(status.getReasonPhrase())
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
 
-        // Save to DB
+        // Save to ExceptionLog
         exceptionLogRepository.save(ExceptionLog.builder()
-                .timestamp(errorResponse.getTimestamp())
+                .timestamp(now)
                 .status(status.value())
-                .error(errorResponse.getError())
-                .message(errorResponse.getMessage())
-                .path(errorResponse.getPath())
+                .error(status.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
                 .build());
+
+        // Save to AuditLog
+        auditLogService.logAction(
+                "EXCEPTION",
+                "GLOBAL_EXCEPTION_HANDLER",
+                "Exception occurred: " + ex.getMessage()
+        );
 
         return new ResponseEntity<>(errorResponse, status);
     }

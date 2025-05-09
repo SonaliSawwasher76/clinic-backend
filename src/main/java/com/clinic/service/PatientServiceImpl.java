@@ -7,6 +7,7 @@ import com.clinic.exception.InvalidInputException;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.mapper.PatientMapper;
 import com.clinic.repository.PatientRepository;
+import com.clinic.service.AuditLogService;  // Import the AuditLogService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +20,15 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
+    private final AuditLogService auditLogService;  // AuditLogService field
 
     @Autowired
-    public PatientServiceImpl(PatientRepository patientRepository, PatientMapper patientMapper) {
+    public PatientServiceImpl(PatientRepository patientRepository,
+                              PatientMapper patientMapper,
+                              AuditLogService auditLogService) {
         this.patientRepository = patientRepository;
         this.patientMapper = patientMapper;
+        this.auditLogService = auditLogService;  // Initialize the AuditLogService
     }
 
     @Override
@@ -36,6 +41,13 @@ public class PatientServiceImpl implements PatientService {
 
         // Save the Patient entity to the database
         Patient savedPatient = patientRepository.save(patient);
+
+        // Log the creation action
+        auditLogService.logAction(
+                "CREATE_PATIENT",
+                "PatientModule",
+                "Patient created with ID: " + savedPatient.getId()
+        );
 
         // Convert the saved Patient entity to the PatientResponseDTO and return it
         return patientMapper.patientToPatientResponseDTO(savedPatient);
@@ -75,6 +87,13 @@ public class PatientServiceImpl implements PatientService {
             // Save the updated Patient entity
             Patient updatedPatient = patientRepository.save(existingPatient);
 
+            // Log the update action
+            auditLogService.logAction(
+                    "UPDATE_PATIENT",
+                    "PatientModule",
+                    "Patient updated with ID: " + updatedPatient.getId()
+            );
+
             // Convert and return the updated Patient entity as a DTO
             return patientMapper.patientToPatientResponseDTO(updatedPatient);
         } else {
@@ -112,6 +131,13 @@ public class PatientServiceImpl implements PatientService {
         if (patientRepository.existsById(id)) {
             // Delete the Patient from the database
             patientRepository.deleteById(id);
+
+            // Log the deletion action
+            auditLogService.logAction(
+                    "DELETE_PATIENT",
+                    "PatientModule",
+                    "Patient deleted with ID: " + id
+            );
         } else {
             // If the Patient doesn't exist, throw ResourceNotFoundException
             throw new ResourceNotFoundException("Patient with ID " + id + " not found");
@@ -134,6 +160,6 @@ public class PatientServiceImpl implements PatientService {
             throw new InvalidInputException("Gender is required");
         }
 
-        // Add more validation logic as needed for other fields
+
     }
 }
