@@ -3,6 +3,7 @@ package com.clinic.service.impl;
 import com.clinic.dto.Auth.SignupRequestWrapperDTO;
 import com.clinic.dto.Auth.UserLoginRequestDTO;
 import com.clinic.dto.Auth.UserLoginResponseDTO;
+import com.clinic.dto.Auth.UserSignupRequestDTO;
 import com.clinic.entity.Doctor;
 import com.clinic.entity.user.User;
 import com.clinic.entity.user.UserProfile;
@@ -37,6 +38,10 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.findByEmail(dto.getUser().getEmail()).isPresent()) {
             return "User already exists";
         }
+        if (!dto.getUser().isAgeValid()) {
+            throw new IllegalArgumentException("Age must be greater than 18");
+        }
+
 
         // Create a User entity
         User user = new User();

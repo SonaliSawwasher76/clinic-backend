@@ -40,6 +40,9 @@ public class PatientServiceImpl implements PatientService {
             throw new RuntimeException("Patient with this email already exists.");
         }
 
+        if (!patientRequestDTO.isAgeValid()) {
+            throw new IllegalArgumentException("Age must be greater than 18");
+        }
         // Validate the input data
         validatePatientInput(patientRequestDTO);
 
@@ -72,12 +75,15 @@ public class PatientServiceImpl implements PatientService {
             Patient existingPatient = existingPatientOptional.get();
 
             // Update only the provided fields in the PatientRequestDTO
-            if (patientRequestDTO.getName() != null) {
-                existingPatient.setName(patientRequestDTO.getName());
+            if (patientRequestDTO.getFirstname() != null) {
+                existingPatient.setFirstname(patientRequestDTO.getFirstname());
             }
-            if (patientRequestDTO.getAge() != null) {
-                existingPatient.setAge(patientRequestDTO.getAge());
+            if (patientRequestDTO.getLastname() != null) {
+                existingPatient.setLastname(patientRequestDTO.getLastname());
             }
+//            if (patientRequestDTO.getAge() != null) {
+//                existingPatient.setAge(patientRequestDTO.getAge());
+//            }
             if (patientRequestDTO.getGender() != null) {
                 existingPatient.setGender(patientRequestDTO.getGender());
             }
@@ -152,16 +158,20 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<PatientResponseDTO> searchPatients(String name, Integer age, String gender, String email, Long id, String contactNumber) {
+    public List<PatientResponseDTO> searchPatients(String firstname, String lastname, String gender, String email, Long id, String contactNumber) {
         Specification<Patient> spec = (root, query, cb) -> {
             Predicate predicate = cb.conjunction();
 
-            if (name != null && !name.isEmpty()) {
-                predicate = cb.and(predicate, cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+            if (firstname != null && !firstname.isEmpty()) {
+                predicate = cb.and(predicate, cb.like(cb.lower(root.get("firstname")), "%" + firstname.toLowerCase() + "%"));
             }
-            if (age != null) {
-                predicate = cb.and(predicate, cb.equal(root.get("age"), age));
+
+            if (lastname != null && !lastname.isEmpty()) {
+                predicate = cb.and(predicate, cb.like(cb.lower(root.get("lastname")), "%" + lastname.toLowerCase() + "%"));
             }
+//            if (age != null) {
+//                predicate = cb.and(predicate, cb.equal(root.get("age"), age));
+//            }
             if (gender != null && !gender.isEmpty()) {
                 predicate = cb.and(predicate, cb.equal(cb.lower(root.get("gender")), gender.toLowerCase()));
             }
@@ -186,14 +196,17 @@ public class PatientServiceImpl implements PatientService {
 
     private void validatePatientInput(PatientRequestDTO dto) {
         // Validate that the patient name is not null or empty
-        if (dto.getName() == null || dto.getName().isEmpty()) {
-            throw new InvalidInputException("Patient name cannot be null or empty");
+        if (dto.getFirstname() == null || dto.getFirstname().isEmpty()) {
+            throw new InvalidInputException("Patient firstname cannot be null or empty");
+        }
+        if (dto.getLastname() == null || dto.getLastname().isEmpty()) {
+            throw new InvalidInputException("Patient lastname cannot be null or empty");
         }
 
-        // Validate that the patient age is greater than 0
-        if (dto.getAge() == null || dto.getAge() <= 0) {
-            throw new InvalidInputException("Age must be greater than 0");
-        }
+        // Validate that the patient's age is greater than 0
+//        if (dto.getAge() == null || dto.getAge() <= 0) {
+//            throw new InvalidInputException("Age must be greater than 0");
+//        }
 
         // Validate that gender is not null or empty
         if (dto.getGender() == null || dto.getGender().isEmpty()) {

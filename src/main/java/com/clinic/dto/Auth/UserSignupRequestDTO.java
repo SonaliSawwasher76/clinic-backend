@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 @Data
 public class UserSignupRequestDTO {
@@ -40,4 +41,10 @@ public class UserSignupRequestDTO {
 
     @NotBlank(message = "Address is required")
     private String address;
+
+    public boolean isAgeValid() {
+        if (dob == null) return false;
+        int age = Period.between(dob, LocalDate.now()).getYears();
+        return age >= 18;
+    }
 }

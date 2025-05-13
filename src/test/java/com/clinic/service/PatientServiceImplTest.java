@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,8 +40,8 @@ class PatientServiceImplTest {
     void testGetPatientById_Success() {
         Patient patient = Patient.builder()
                 .id(1L)
-                .name("John Doe")
-                .age(30)
+                .firstname("John Doe")
+                .dob(LocalDate.parse("25-03-2007"))
                 .gender("Male")
                 .contactNumber("1234567890")
                 .address("123 Main St")
@@ -49,8 +50,8 @@ class PatientServiceImplTest {
 
         PatientResponseDTO responseDTO = PatientResponseDTO.builder()
                 .id(1L)
-                .name("John Doe")
-                .age(30)
+                .firstname("John Doe")
+                .dob(LocalDate.parse("25-03-2007"))
                 .gender("Male")
                 .contactNumber("1234567890")
                 .address("123 Main St")
@@ -63,7 +64,7 @@ class PatientServiceImplTest {
         PatientResponseDTO result = patientService.getPatientById(1L);
 
         assertNotNull(result);
-        assertEquals("John Doe", result.getName());
+        assertEquals("John Doe", result.getFirstname());
         verify(patientRepository, times(1)).findById(1L);
     }
 
@@ -81,8 +82,8 @@ class PatientServiceImplTest {
     @Test
     void testCreatePatient_Success() {
         PatientRequestDTO requestDTO = PatientRequestDTO.builder()
-                .name("Jane Doe")
-                .age(25)
+                .firstname("Jane Doe")
+                .dob(LocalDate.parse("25-03-2007"))
                 .gender("Female")
                 .contactNumber("9876543210")
                 .address("456 Park Ave")
@@ -91,8 +92,8 @@ class PatientServiceImplTest {
 
         Patient patient = Patient.builder()
                 .id(2L)
-                .name("Jane Doe")
-                .age(25)
+                .firstname("Jane Doe")
+                .dob(LocalDate.parse("25-03-2007"))
                 .gender("Female")
                 .contactNumber("9876543210")
                 .address("456 Park Ave")
@@ -101,8 +102,8 @@ class PatientServiceImplTest {
 
         PatientResponseDTO responseDTO = PatientResponseDTO.builder()
                 .id(2L)
-                .name("Jane Doe")
-                .age(25)
+                .firstname("Jane Doe")
+                .dob(LocalDate.parse("25-03-2007"))
                 .gender("Female")
                 .contactNumber("9876543210")
                 .address("456 Park Ave")
@@ -116,7 +117,7 @@ class PatientServiceImplTest {
         PatientResponseDTO result = patientService.createPatient(requestDTO);
 
         assertNotNull(result);
-        assertEquals("Jane Doe", result.getName());
+        assertEquals("Jane Doe", result.getFirstname());
         verify(patientRepository, times(1)).save(patient);
     }
 }

@@ -3,6 +3,9 @@ package com.clinic.dto.Patient;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,12 +14,14 @@ public class PatientRequestDTO {
 
     @NotBlank(message = "Name is required")
     @Size(min = 2, max = 100)
-    private String name;
+    private String firstname;
 
-    @NotNull(message = "Age is required")
-    @Min(value = 0, message = "Age must be a positive number")
-    @Max(value = 120, message = "Age must be below 120")
-    private Integer age;
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 100)
+    private String lastname;
+
+    @NotNull(message = "Date of Birth is required")
+    private LocalDate dob;
 
     @NotBlank(message = "Gender is required")
     private String gender;
@@ -30,4 +35,10 @@ public class PatientRequestDTO {
     private String email;
 
     private String address;
+
+    public boolean isAgeValid() {
+        if (dob == null) return false;
+        int age = Period.between(dob, LocalDate.now()).getYears();
+        return age >= 18;
+    }
 }

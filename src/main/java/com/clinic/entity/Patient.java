@@ -3,6 +3,8 @@ package com.clinic.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -14,11 +16,13 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String firstname;
 
-    private int age;
+    private String lastname;
 
     private String gender;
+
+    private LocalDate dob;
 
     private String contactNumber;
 

@@ -16,6 +16,6 @@ public interface PatientService {
 
     void deletePatient(Long id);
 
-    List<PatientResponseDTO> searchPatients(String name, Integer age, String gender, String email, Long id, String contactNumber);
+    List<PatientResponseDTO> searchPatients(String firstname,String lastname, String gender, String email, Long id, String contactNumber);
 
 }

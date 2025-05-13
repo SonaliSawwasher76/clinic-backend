@@ -2,6 +2,8 @@ package com.clinic.dto.Patient;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -9,10 +11,12 @@ import lombok.*;
 public class PatientResponseDTO {
 
     private Long id;
-    private String name;
-    private int age;
+    private String firstname;
+    private String lastname;
+
     private String gender;
     private String contactNumber;
     private String email;
     private String address;
+    private LocalDate dob;
 }

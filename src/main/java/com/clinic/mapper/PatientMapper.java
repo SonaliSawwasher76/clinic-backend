@@ -15,8 +15,8 @@ public class PatientMapper {
         }
         return PatientResponseDTO.builder()
                 .id(patient.getId())
-                .name(patient.getName())
-                .age(patient.getAge())
+                .firstname(patient.getFirstname())
+                .lastname(patient.getLastname())
                 .gender(patient.getGender())
                 .contactNumber(patient.getContactNumber())
                 .address(patient.getAddress())
@@ -30,8 +30,9 @@ public class PatientMapper {
             return null;
         }
         return Patient.builder()
-                .name(patientRequestDTO.getName())
-                .age(patientRequestDTO.getAge())
+                .firstname(patientRequestDTO.getFirstname())
+                .lastname(patientRequestDTO.getLastname())
+                .dob(patientRequestDTO.getDob())
                 .gender(patientRequestDTO.getGender())
                 .contactNumber(patientRequestDTO.getContactNumber())
                 .address(patientRequestDTO.getAddress())

@@ -33,9 +33,10 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**",  "/swagger-ui/**", "/v3/api-docs/**")
+                        .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
-                        .requestMatchers("/api/patients/**").hasAnyRole("ADMIN", "DOCTOR", "RECEPTIONIST")
+                        .requestMatchers("/api/doctors/**").hasAnyRole("ADMIN","RECEPTIONIST") // Admin-only access for doctor CRUD
+                        .requestMatchers("/api/patients/**").hasAnyRole("ADMIN", "DOCTOR", "RECEPTIONIST") // Modify patient info for authorized roles
                         .anyRequest().authenticated()
                 );
         return http.build();
