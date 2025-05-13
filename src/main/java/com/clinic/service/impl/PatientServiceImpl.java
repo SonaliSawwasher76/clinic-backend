@@ -1,14 +1,17 @@
-package com.clinic.service;
+package com.clinic.service.impl;
 
-import com.clinic.dto.PatientRequestDTO;
-import com.clinic.dto.PatientResponseDTO;
+import com.clinic.dto.Patient.PatientRequestDTO;
+import com.clinic.dto.Patient.PatientResponseDTO;
 import com.clinic.entity.Patient;
 import com.clinic.exception.InvalidInputException;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.mapper.PatientMapper;
 import com.clinic.repository.PatientRepository;
 import com.clinic.service.AuditLogService;  // Import the AuditLogService
+import com.clinic.service.PatientService;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -143,6 +146,39 @@ public class PatientServiceImpl implements PatientService {
             throw new ResourceNotFoundException("Patient with ID " + id + " not found");
         }
     }
+
+    @Override
+    public List<PatientResponseDTO> searchPatients(String name, Integer age, String gender, String email, Long id, String contactNumber) {
+        Specification<Patient> spec = (root, query, cb) -> {
+            Predicate predicate = cb.conjunction();
+
+            if (name != null && !name.isEmpty()) {
+                predicate = cb.and(predicate, cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+            }
+            if (age != null) {
+                predicate = cb.and(predicate, cb.equal(root.get("age"), age));
+            }
+            if (gender != null && !gender.isEmpty()) {
+                predicate = cb.and(predicate, cb.equal(cb.lower(root.get("gender")), gender.toLowerCase()));
+            }
+            if (email != null && !email.isEmpty()) {
+                predicate = cb.and(predicate, cb.like(cb.lower(root.get("email")), "%" + email.toLowerCase() + "%"));
+            }
+            if (id != null) {
+                predicate = cb.and(predicate, cb.equal(root.get("id"), id));
+            }
+            if (contactNumber != null && !contactNumber.isEmpty()) {
+                predicate = cb.and(predicate, cb.equal(root.get("contactNumber"), contactNumber));
+            }
+
+            return predicate;
+        };
+
+        return patientRepository.findAll(spec).stream()
+                .map(patientMapper::patientToPatientResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 
     private void validatePatientInput(PatientRequestDTO dto) {
         // Validate that the patient name is not null or empty

@@ -1,7 +1,7 @@
 package com.clinic.mapper;
 
-import com.clinic.dto.PatientRequestDTO;
-import com.clinic.dto.PatientResponseDTO;
+import com.clinic.dto.Patient.PatientRequestDTO;
+import com.clinic.dto.Patient.PatientResponseDTO;
 import com.clinic.entity.Patient;
 import org.springframework.stereotype.Component;
 

@@ -1,13 +1,14 @@
 package com.clinic.controller;
 
-import com.clinic.dto.PatientRequestDTO;
-import com.clinic.dto.PatientResponseDTO;
+import com.clinic.dto.Patient.PatientRequestDTO;
+import com.clinic.dto.Patient.PatientResponseDTO;
 import com.clinic.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,9 +70,24 @@ public class PatientController {
             @ApiResponse(responseCode = "204", description = "Patient deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Patient not found")
     })
+
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePatient(@PathVariable @Min(value = 1, message = "ID must be a positive integer") Long id) {
         patientService.deletePatient(id);
+    }
+
+    @GetMapping("/patient search")
+    public ResponseEntity<List<PatientResponseDTO>> searchPatients(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer age,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) String contactNumber
+    ) {
+        List<PatientResponseDTO> results = patientService.searchPatients(name, age, gender, email, id, contactNumber);
+        return ResponseEntity.ok(results);
     }
 }

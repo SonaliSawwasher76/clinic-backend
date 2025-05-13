@@ -1,4 +1,4 @@
-package com.clinic.dto;
+package com.clinic.dto.Patient;
 
 import lombok.*;
 

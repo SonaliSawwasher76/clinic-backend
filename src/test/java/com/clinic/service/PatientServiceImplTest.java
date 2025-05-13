@@ -1,12 +1,13 @@
 package com.clinic.service;
 
-import com.clinic.dto.PatientRequestDTO;
-import com.clinic.dto.PatientResponseDTO;
+import com.clinic.dto.Patient.PatientRequestDTO;
+import com.clinic.dto.Patient.PatientResponseDTO;
 import com.clinic.entity.Patient;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.mapper.PatientMapper;
 import com.clinic.repository.PatientRepository;
 
+import com.clinic.service.impl.PatientServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
