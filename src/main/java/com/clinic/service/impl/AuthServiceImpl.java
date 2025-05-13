@@ -83,7 +83,8 @@ public class AuthServiceImpl implements AuthService {
         // Check if the password matches
         if (passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             // Generate token here
-            String token = jwtUtil.generateToken(user.getEmail());
+           // String token = jwtUtil.generateToken(user.getEmail());
+            String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
 
             // Return successful login response
             return new UserLoginResponseDTO(token, user.getRole().name(), user.getUserId(), "Login successful");

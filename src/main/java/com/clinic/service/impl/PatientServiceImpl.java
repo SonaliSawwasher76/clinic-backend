@@ -36,6 +36,10 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public PatientResponseDTO createPatient(PatientRequestDTO patientRequestDTO) {
+        if (patientRepository.findByEmail(patientRequestDTO.getEmail()).isPresent()) {
+            throw new RuntimeException("Patient with this email already exists.");
+        }
+
         // Validate the input data
         validatePatientInput(patientRequestDTO);
 

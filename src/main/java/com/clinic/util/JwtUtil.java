@@ -29,11 +29,17 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
+    // Method to extract the role from the JWT token
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class)); // Extract role from JWT
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
+    // Corrected method to extract all claims from the token using Jwts.parser()
     public Claims extractAllClaims(String token) {
         return Jwts.parser() // OR Jwts.parserBuilder() depending on import
                 .verifyWith(key)
@@ -42,8 +48,9 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    public String generateToken(String username) {
-        return generateToken(Map.of(), username);
+    // Generate JWT token with role-based claim
+    public String generateToken(String username, String role) {
+        return generateToken(Map.of("role", role), username);  // Include role as extra claim
     }
 
     public String generateToken(Map<String, Object> extraClaims, String username) {
@@ -52,10 +59,11 @@ public class JwtUtil {
                 .claims(extraClaims)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
-                .signWith(key)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    // Validate token based on username and expiration
     public boolean isTokenValid(String token, String username) {
         final String extractedUsername = extractUsername(token);
         return extractedUsername.equals(username) && !isTokenExpired(token);
