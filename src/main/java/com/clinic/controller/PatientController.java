@@ -52,4 +52,19 @@ public class PatientController {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'STAFF')")
+    public ResponseEntity<List<PatientResponseDTO>> searchPatients(
+            @RequestParam(required = false) String firstname,
+            @RequestParam(required = false) String lastname,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) String contactNumber
+    ) {
+        List<PatientResponseDTO> patients = patientService.searchPatients(firstname, lastname, gender, email, id, contactNumber);
+        return ResponseEntity.ok(patients);
+    }
+
 }

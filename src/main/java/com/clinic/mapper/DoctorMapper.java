@@ -35,6 +35,7 @@ public class DoctorMapper {
             dto.setLastName(profile.getLastName());
             dto.setGender(profile.getGender());
             dto.setContactNo(profile.getContactNo());
+            dto.setAddress(profile.getAddress());
         }
         if (user != null) {
             dto.setEmail(user.getEmail());

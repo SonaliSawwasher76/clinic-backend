@@ -9,7 +9,9 @@ import com.clinic.mapper.PatientMapper;
 import com.clinic.repository.PatientRepository;
 import com.clinic.service.AuditLogService;  // Import the AuditLogService
 import com.clinic.service.PatientService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -158,39 +160,62 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+
     public List<PatientResponseDTO> searchPatients(String firstname, String lastname, String gender, String email, Long id, String contactNumber) {
+
+        // ✅ Trim inputs and assign to final local variables for use in lambda
+        final String fn = firstname != null ? firstname.trim() : null;
+        final String ln = lastname != null ? lastname.trim() : null;
+        final String g = gender != null ? gender.trim() : null;
+        final String em = email != null ? email.trim() : null;
+        final String cn = contactNumber != null ? contactNumber.trim() : null;
+
+        System.out.println("Searching for firstname: " + fn);
+
         Specification<Patient> spec = (root, query, cb) -> {
-            Predicate predicate = cb.conjunction();
+            Predicate predicate = cb.conjunction(); // Start with an always-true condition
 
-            if (firstname != null && !firstname.isEmpty()) {
-                predicate = cb.and(predicate, cb.like(cb.lower(root.get("firstname")), "%" + firstname.toLowerCase() + "%"));
+            if (fn != null && !fn.isEmpty()) {
+                predicate = addLikeCondition(predicate, cb, root, "firstname", fn);
             }
 
-            if (lastname != null && !lastname.isEmpty()) {
-                predicate = cb.and(predicate, cb.like(cb.lower(root.get("lastname")), "%" + lastname.toLowerCase() + "%"));
+            if (ln != null && !ln.isEmpty()) {
+                predicate = addLikeCondition(predicate, cb, root, "lastname", ln);
             }
-//            if (age != null) {
-//                predicate = cb.and(predicate, cb.equal(root.get("age"), age));
-//            }
-            if (gender != null && !gender.isEmpty()) {
-                predicate = cb.and(predicate, cb.equal(cb.lower(root.get("gender")), gender.toLowerCase()));
+
+            if (g != null && !g.isEmpty()) {
+                predicate = cb.and(predicate, cb.equal(cb.lower(root.get("gender")), g.toLowerCase()));
             }
-            if (email != null && !email.isEmpty()) {
-                predicate = cb.and(predicate, cb.like(cb.lower(root.get("email")), "%" + email.toLowerCase() + "%"));
+
+            if (em != null && !em.isEmpty()) {
+                predicate = addLikeCondition(predicate, cb, root, "email", em);
             }
+
             if (id != null) {
                 predicate = cb.and(predicate, cb.equal(root.get("id"), id));
             }
-            if (contactNumber != null && !contactNumber.isEmpty()) {
-                predicate = cb.and(predicate, cb.equal(root.get("contactNumber"), contactNumber));
+
+            if (cn != null && !cn.isEmpty()) {
+                predicate = cb.and(predicate, cb.equal(root.get("contactNumber"), cn));
             }
 
+            System.out.println("Specification: " + predicate);
             return predicate;
         };
 
-        return patientRepository.findAll(spec).stream()
+        // Fetch and log patients
+        List<Patient> patients = patientRepository.findAll(spec);
+        System.out.println("Found patients: " + patients);
+
+        // Map to DTO
+        return patients.stream()
                 .map(patientMapper::patientToPatientResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    // Helper method to add LIKE conditions dynamically
+    private Predicate addLikeCondition(Predicate predicate, CriteriaBuilder cb, Root<Patient> root, String field, String value) {
+        return cb.and(predicate, cb.like(cb.lower(root.get(field)), "%" + value.toLowerCase() + "%"));
     }
 
 

@@ -17,6 +17,7 @@ public class PatientMapper {
                 .id(patient.getId())
                 .firstname(patient.getFirstname())
                 .lastname(patient.getLastname())
+                .dob(patient.getDob())
                 .gender(patient.getGender())
                 .contactNumber(patient.getContactNumber())
                 .address(patient.getAddress())

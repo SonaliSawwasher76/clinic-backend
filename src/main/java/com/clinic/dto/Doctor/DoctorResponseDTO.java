@@ -1,7 +1,13 @@
 package com.clinic.dto.Doctor;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 public class DoctorResponseDTO {
     private Long doctorId;
@@ -13,4 +19,5 @@ public class DoctorResponseDTO {
     private String specialization;
     private String licenseNumber;
     private Integer yearsOfExperience;
+    private String address;
 }
