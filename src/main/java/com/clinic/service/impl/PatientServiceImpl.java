@@ -7,15 +7,17 @@ import com.clinic.exception.InvalidInputException;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.mapper.PatientMapper;
 import com.clinic.repository.PatientRepository;
-import com.clinic.service.AuditLogService;  // Import the AuditLogService
-import com.clinic.service.PatientService;
+import com.clinic.service.services.AuditLogService;  // Import the AuditLogService
+import com.clinic.service.services.PatientService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,8 +44,8 @@ public class PatientServiceImpl implements PatientService {
             throw new RuntimeException("Patient with this email already exists.");
         }
 
-        if (!patientRequestDTO.isAgeValid()) {
-            throw new IllegalArgumentException("Age must be greater than 18");
+        if (patientRequestDTO.getDob() != null && patientRequestDTO.getDob().isAfter(LocalDate.now())) {
+            throw new InvalidInputException("Date of birth cannot be in the future");
         }
         // Validate the input data
         validatePatientInput(patientRequestDTO);
@@ -83,9 +85,16 @@ public class PatientServiceImpl implements PatientService {
             if (patientRequestDTO.getLastname() != null) {
                 existingPatient.setLastname(patientRequestDTO.getLastname());
             }
-//            if (patientRequestDTO.getAge() != null) {
-//                existingPatient.setAge(patientRequestDTO.getAge());
-//            }
+
+            if (patientRequestDTO.getDob() != null) {
+                if (patientRequestDTO.getDob().isAfter(LocalDate.now())) {
+                    throw new InvalidInputException("Date of birth cannot be in the future");
+                }
+                else {
+                    existingPatient.setDob(patientRequestDTO.getDob());
+                }
+
+            }
             if (patientRequestDTO.getGender() != null) {
                 existingPatient.setGender(patientRequestDTO.getGender());
             }
@@ -97,6 +106,10 @@ public class PatientServiceImpl implements PatientService {
             }
             if (patientRequestDTO.getAddress() != null) {
                 existingPatient.setAddress(patientRequestDTO.getAddress());
+            }
+
+            if (patientRequestDTO.getDob() != null && patientRequestDTO.getDob().isAfter(LocalDate.now())) {
+                throw new InvalidInputException("Date of birth cannot be in the future");
             }
 
             // Save the updated Patient entity

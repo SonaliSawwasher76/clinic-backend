@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+<button id="payBtn">Pay via Razorpay</button>
+
+<script>
+    document.getElementById('payBtn').onclick = async () => {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const visitRecordId = urlParams.get("visitRecordId");
+
+            if (!visitRecordId) {
+                alert("visitRecordId not found in URL");
+                return;
+            }
+
+            const res = await fetch(`/api/payments/order?visitRecordId=${visitRecordId}`);
+            if (!res.ok) throw new Error(`Server error: ${res.status} ${res.statusText}`);
+
+            const data = await res.json();
+            const orderId = data.order.id;
+            const amount = data.order.amount;
+            const keyId = data.keyId;
+            const clinicName = data.clinicName;
+
+            const options = {
+                key: keyId,
+                order_id: orderId,
+                amount: amount,
+                currency: 'INR',
+                name: clinicName,
+                handler: async (response) => {
+                    await fetch('/api/payments/verify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(response)
+                    });
+                    alert('Payment success & verified!');
+                }
+            };
+
+            new Razorpay(options).open();
+
+        } catch (error) {
+            console.error("Payment initiation failed:", error);
+            alert("Failed to initiate payment: " + error.message);
+        }
+    };
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 package com.clinic.exception;
 
 import com.clinic.entity.ExceptionLog;
-import com.clinic.service.AuditLogService;
+import com.clinic.service.services.AuditLogService;
 import com.clinic.repository.ExceptionLogRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.*;
@@ -26,6 +26,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
         return buildResponse(ex, HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateResource(DuplicateResourceException ex, HttpServletRequest request) {
+        return buildResponse(ex, HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(InvalidInputException.class)

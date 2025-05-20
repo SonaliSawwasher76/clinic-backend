@@ -12,7 +12,7 @@ import com.clinic.exception.InvalidInputException;
 import com.clinic.mapper.DoctorMapper;
 import com.clinic.repository.DoctorRepository;
 import com.clinic.repository.UserRepository;
-import com.clinic.service.AuditLogService;
+import com.clinic.service.services.AuditLogService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

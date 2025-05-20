@@ -2,11 +2,14 @@ package com.clinic.entity;
 
 import com.clinic.entity.user.User;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Table(name = "doctors")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Doctor {
 
     @Id
@@ -18,6 +21,6 @@ public class Doctor {
     private Integer yearsOfExperience;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

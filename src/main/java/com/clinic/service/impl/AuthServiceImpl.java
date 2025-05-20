@@ -3,21 +3,24 @@ package com.clinic.service.impl;
 import com.clinic.dto.Auth.SignupRequestWrapperDTO;
 import com.clinic.dto.Auth.UserLoginRequestDTO;
 import com.clinic.dto.Auth.UserLoginResponseDTO;
-import com.clinic.dto.Auth.UserSignupRequestDTO;
+import com.clinic.dto.Auth.UserDetailsResponseDTO;
 import com.clinic.entity.Doctor;
+import com.clinic.entity.Workspace;
 import com.clinic.entity.user.User;
 import com.clinic.entity.user.UserProfile;
 import com.clinic.enums.Role;
 import com.clinic.repository.DoctorRepository;
 import com.clinic.repository.UserRepository;
-import com.clinic.service.AuthService;
-import com.clinic.service.AuditLogService;
+import com.clinic.repository.WorkspaceRepository;
+import com.clinic.service.services.AuthService;
+import com.clinic.service.services.AuditLogService;
 import com.clinic.util.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,8 @@ public class AuthServiceImpl implements AuthService {
     private final DoctorRepository doctorRepository;
     private final AuditLogService auditLogService;
     private final JwtUtil jwtUtil;
+    private final WorkspaceRepository workspaceRepository;
+
 
 
 
@@ -41,6 +46,10 @@ public class AuthServiceImpl implements AuthService {
         if (!dto.getUser().isAgeValid()) {
             throw new IllegalArgumentException("Age must be greater than 18");
         }
+        Long workspaceId = dto.getUser().getWorkspaceId();
+        Workspace workspace = workspaceRepository.findById(workspaceId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Workspace ID: " + workspaceId));
+
 
 
         // Create a User entity
@@ -48,6 +57,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(dto.getUser().getEmail());
         user.setPassword(passwordEncoder.encode(dto.getUser().getPassword()));
         user.setRole(dto.getUser().getRole());
+        user.setWorkspace(workspace);
 
         // Create a UserProfile entity
         UserProfile profile = new UserProfile();
@@ -97,4 +107,43 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Invalid credentials");
         }
     }
+
+    public UserDetailsResponseDTO getUserDetailsById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserDetailsResponseDTO response = new UserDetailsResponseDTO();
+
+        // Common user info
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+        response.setWorkspaceId(user.getWorkspace().getWorkspaceId());
+        response.setUserId(user.getUserId());
+
+        // User profile info
+        UserProfile profile = user.getUserProfile();
+        response.setFirstName(profile.getFirstName());
+        response.setLastName(profile.getLastName());
+        response.setDob(profile.getDob());
+        response.setContactNo(profile.getContactNo());
+        response.setGender(profile.getGender());
+        response.setAddress(profile.getAddress());
+
+        // If user is doctor, add doctor details
+        if(user.getRole() == Role.DOCTOR) {
+            Optional<Doctor> doctorOpt = doctorRepository.findByUser(user);
+            if (doctorOpt.isPresent()) {
+                Doctor doctor = doctorOpt.get();
+                response.setSpecialization(doctor.getSpecialization());
+                response.setLicenseNumber(doctor.getLicenseNumber());
+                response.setYearsOfExperience(doctor.getYearsOfExperience());
+
+            }
+
+        }
+
+        return response;
+    }
+
+
 }

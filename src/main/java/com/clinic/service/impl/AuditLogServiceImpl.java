@@ -3,7 +3,7 @@ package com.clinic.service.impl;
 import com.clinic.entity.AuditLog;
 import com.clinic.repository.AuditLogRepository;
 
-import com.clinic.service.AuditLogService;
+import com.clinic.service.services.AuditLogService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

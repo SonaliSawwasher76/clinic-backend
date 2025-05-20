@@ -2,7 +2,7 @@ package com.clinic.controller;
 
 import com.clinic.dto.Patient.MedicalHistoryRequestDTO;
 import com.clinic.dto.Patient.MedicalHistoryResponseDTO;
-import com.clinic.service.MedicalHistoryService;
+import com.clinic.service.services.MedicalHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

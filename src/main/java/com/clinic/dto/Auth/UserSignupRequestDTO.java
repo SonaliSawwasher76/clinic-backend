@@ -47,6 +47,9 @@ public class UserSignupRequestDTO {
     @NotBlank(message = "Address is required")
     private String address;
 
+    @NotNull(message = "Workspace ID is required")
+    private Long workspaceId;
+
     public boolean isAgeValid() {
         if (dob == null) return false;
         int age = Period.between(dob, LocalDate.now()).getYears();

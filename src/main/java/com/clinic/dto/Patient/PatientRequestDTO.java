@@ -36,9 +36,9 @@ public class PatientRequestDTO {
 
     private String address;
 
-    public boolean isAgeValid() {
-        if (dob == null) return false;
-        int age = Period.between(dob, LocalDate.now()).getYears();
-        return age >= 18;
-    }
+//    public boolean isAgeValid() {
+//        if (dob == null) return false;
+//        int age = Period.between(dob, LocalDate.now()).getYears();
+//        return age >= 18;
+//    }
 }

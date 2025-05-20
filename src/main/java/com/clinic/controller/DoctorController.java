@@ -1,10 +1,8 @@
 package com.clinic.controller;
 
-import com.clinic.dto.Doctor.DoctorRequestDTO;
 import com.clinic.dto.Doctor.DoctorResponseDTO;
 import com.clinic.dto.Auth.SignupRequestWrapperDTO;
-import com.clinic.dto.Doctor.DoctorSearchRequestDTO;
-import com.clinic.service.DoctorService;
+import com.clinic.service.services.DoctorService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

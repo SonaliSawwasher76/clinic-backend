@@ -31,14 +31,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil),
+                        UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
-                        .permitAll()
-                        .requestMatchers("/api/doctors/**").hasAnyRole("ADMIN","RECEPTIONIST") // Admin-only access for doctor CRUD
-                        .requestMatchers("/api/patients/**").hasAnyRole("ADMIN", "DOCTOR", "RECEPTIONIST") // Modify patient info for authorized roles
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/api/workspaces",
+                                "/static/**",
+                                "/**.html",
+                                "/**.js",
+                                "/**.css","/api/payments/**"
+                        ).permitAll()
+                        .requestMatchers("/api/doctors/**")
+                        .hasAnyRole("ADMIN", "RECEPTIONIST")
+                        .requestMatchers("/api/patients/**")
+                        .hasAnyRole("ADMIN", "DOCTOR", "RECEPTIONIST")
                         .anyRequest().authenticated()
                 );
+
         return http.build();
     }
+
 }

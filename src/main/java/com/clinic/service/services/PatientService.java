@@ -1,4 +1,4 @@
-package com.clinic.service;
+package com.clinic.service.services;
 
 import com.clinic.dto.Patient.PatientRequestDTO;
 import com.clinic.dto.Patient.PatientResponseDTO;

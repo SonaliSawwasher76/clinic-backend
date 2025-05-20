@@ -1,4 +1,4 @@
-package com.clinic.service;
+package com.clinic.service.services;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

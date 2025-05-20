@@ -28,6 +28,7 @@ public class DoctorMapper {
         User user = doctor.getUser();
         UserProfile profile = user != null ? user.getUserProfile() : null;
 
+
         DoctorResponseDTO dto = new DoctorResponseDTO();
         dto.setDoctorId(doctor.getDoctorId());
         if (profile != null) {
@@ -36,10 +37,14 @@ public class DoctorMapper {
             dto.setGender(profile.getGender());
             dto.setContactNo(profile.getContactNo());
             dto.setAddress(profile.getAddress());
+
         }
         if (user != null) {
             dto.setEmail(user.getEmail());
+            dto.setWorkSpaceId(String.valueOf(user.getWorkspace().getWorkspaceId()));
+
         }
+
         dto.setSpecialization(doctor.getSpecialization());
         dto.setLicenseNumber(doctor.getLicenseNumber());
         dto.setYearsOfExperience(doctor.getYearsOfExperience());

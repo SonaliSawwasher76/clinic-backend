@@ -2,7 +2,7 @@ package com.clinic.controller;
 
 import com.clinic.dto.Patient.PatientRequestDTO;
 import com.clinic.dto.Patient.PatientResponseDTO;
-import com.clinic.service.PatientService;
+import com.clinic.service.services.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

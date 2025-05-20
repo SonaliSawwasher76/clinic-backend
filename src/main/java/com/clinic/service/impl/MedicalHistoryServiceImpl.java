@@ -8,7 +8,7 @@ import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.mapper.MedicalHistoryMapper;
 import com.clinic.repository.MedicalHistoryRepository;
 import com.clinic.repository.PatientRepository;
-import com.clinic.service.MedicalHistoryService;
+import com.clinic.service.services.MedicalHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -15,7 +15,6 @@ public class UserProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_profile_id")
     private Long userProfileId;
 
     private String firstName;
@@ -24,6 +23,4 @@ public class UserProfile {
     private String gender;
     private String address;
     private LocalDate dob;
-
-    // Removed bidirectional reference to User
 }

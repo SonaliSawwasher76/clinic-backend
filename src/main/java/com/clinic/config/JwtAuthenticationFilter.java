@@ -46,6 +46,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 Collections.singletonList(authority) // Set user role here
                         );
 
+                System.out.println("Token username  = " + username);
+                System.out.println("Token role      = " + role);
+                System.out.println("Authority being set = ROLE_" + role.toUpperCase());
+
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

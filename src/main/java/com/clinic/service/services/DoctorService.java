@@ -1,9 +1,7 @@
-package com.clinic.service;
+package com.clinic.service.services;
 
-import com.clinic.dto.Doctor.DoctorRequestDTO;
 import com.clinic.dto.Doctor.DoctorResponseDTO;
 import com.clinic.dto.Auth.SignupRequestWrapperDTO;
-import com.clinic.dto.Doctor.DoctorSearchRequestDTO;
 
 import java.util.List;
 

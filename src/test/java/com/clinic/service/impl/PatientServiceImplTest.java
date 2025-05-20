@@ -6,7 +6,7 @@ import com.clinic.entity.Patient;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.mapper.PatientMapper;
 import com.clinic.repository.PatientRepository;
-import com.clinic.service.AuditLogService;  // Ensure this import is included
+import com.clinic.service.services.AuditLogService;  // Ensure this import is included
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

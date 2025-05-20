@@ -6,6 +6,7 @@ import com.clinic.dto.Auth.UserSignupRequestDTO;
 import com.clinic.dto.Auth.SignupRequestWrapperDTO;
 
 import com.clinic.entity.Doctor;
+import com.clinic.entity.Workspace;
 import com.clinic.entity.user.User;
 import com.clinic.entity.user.UserProfile;
 import com.clinic.enums.Role;
@@ -14,8 +15,14 @@ import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.mapper.DoctorMapper;
 import com.clinic.repository.DoctorRepository;
 import com.clinic.repository.UserRepository;
-import com.clinic.service.AuditLogService;
-import com.clinic.service.DoctorService;
+import com.clinic.repository.WorkspaceRepository;
+import com.clinic.service.services.AuditLogService;
+import com.clinic.service.services.DoctorService;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+ // inject in constructor
+
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -23,8 +30,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,14 +43,17 @@ public class DoctorServiceImpl implements DoctorService {
     private final DoctorMapper doctorMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuditLogService auditLogService;  // AuditLogService field
+    private final WorkspaceRepository workspaceRepository;
 
     public DoctorServiceImpl(UserRepository userRepository, DoctorRepository doctorRepository,
-                             DoctorMapper doctorMapper, PasswordEncoder passwordEncoder,AuditLogService auditLogService) {
+                             DoctorMapper doctorMapper, PasswordEncoder passwordEncoder,AuditLogService auditLogService,WorkspaceRepository workspaceRepository) {
         this.userRepository = userRepository;
         this.doctorRepository = doctorRepository;
         this.doctorMapper = doctorMapper;
         this.passwordEncoder = passwordEncoder;
         this.auditLogService= auditLogService;
+        this.workspaceRepository = workspaceRepository;
+
     }
     @PersistenceContext
     private EntityManager entityManager;
@@ -59,11 +68,16 @@ public class DoctorServiceImpl implements DoctorService {
             throw new InvalidInputException("Age must be greater than 18");
         }
 
+        Workspace workspace = workspaceRepository.findById(userSignupRequestDTO.getWorkspaceId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Workspace not found with ID " + userSignupRequestDTO.getWorkspaceId()));
+
         // 1. Create a User entity with a role DOCTOR
         User user = new User();
         user.setEmail(userSignupRequestDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userSignupRequestDTO.getPassword()));  // Encode password
         user.setRole(Role.DOCTOR);  // Set role as DOCTOR
+        user.setWorkspace(workspace);
         userRepository.save(user);  // Save user to users table
 
         // 2. Create a UserProfile for the doctor
@@ -107,9 +121,11 @@ public class DoctorServiceImpl implements DoctorService {
 
         // Step 3: Update User entity
         UserSignupRequestDTO userDTO = request.getUser();
+
         user.setEmail(userDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // re-encode a new password if updating
         user.setRole(userDTO.getRole());
+        user.setWorkspace(user.getWorkspace());
 
         // Step 4: Update UserProfile
         UserProfile profile = user.getUserProfile();
@@ -125,6 +141,7 @@ public class DoctorServiceImpl implements DoctorService {
         profile.setContactNo(userDTO.getContactNo());
         profile.setGender(userDTO.getGender());
         profile.setAddress(userDTO.getAddress());
+
 
         // Step 5: Update Doctor entity
         DoctorRequestDTO doctorDTO = request.getDoctor();

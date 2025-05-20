@@ -20,4 +20,5 @@ public class DoctorResponseDTO {
     private String licenseNumber;
     private Integer yearsOfExperience;
     private String address;
+    private String workSpaceId;
 }
