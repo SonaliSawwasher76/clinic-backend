@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+    --clinic-blue: #48cae4;
+    --clinic-white: #ffffff;
+  }
+
+  .bg-clinic-blue {
+    background-color: var(--clinic-blue) !important;
+    color: var(--clinic-white) !important;
+  }
+  
+  .text-clinic-blue {
+    color: var(--clinic-blue) !important;
+  }
+  
+  .border-clinic-blue {
+    border: 1px solid var(--clinic-blue) !important;
+  }
+  .bg-clinic-blue:hover {
+    background-color: #3dbcd2 !important; /* Slightly darker blue */
+  }
+  .custom-btn {
+    background-color: var(--clinic-blue);
+    color: var(--clinic-white);
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-btn:hover {
+    background-color: #3dbcd2;
+  }
+  
