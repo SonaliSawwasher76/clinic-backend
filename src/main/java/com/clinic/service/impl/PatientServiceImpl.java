@@ -226,6 +226,13 @@ public class PatientServiceImpl implements PatientService {
                 .collect(Collectors.toList());
     }
 
+    public List<PatientResponseDTO> searchPatientsByQuery(String query) {
+        List<Patient> matchedPatients = patientRepository.searchByQuery(query);
+        return matchedPatients.stream()
+                .map(patientMapper::patientToPatientResponseDTO)
+                .toList();
+    }
+
     // Helper method to add LIKE conditions dynamically
     private Predicate addLikeCondition(Predicate predicate, CriteriaBuilder cb, Root<Patient> root, String field, String value) {
         return cb.and(predicate, cb.like(cb.lower(root.get(field)), "%" + value.toLowerCase() + "%"));

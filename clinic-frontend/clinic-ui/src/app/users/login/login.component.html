@@ -1,0 +1,45 @@
+<div class="container d-flex justify-content-center align-items-center vh-100" style="background-color: #f0f8ff;">
+    <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px; border: none;">
+        <h3 class="text-center mb-4" style="color: #48cae4;">Clinic Management Login</h3>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" formControlName="email"
+                    placeholder="Enter your email"
+                    [ngClass]="{'is-invalid': submitted && loginForm.get('email')?.invalid}" />
+                <div class="invalid-feedback" *ngIf="submitted && loginForm.get('email')?.errors?.['required']">
+                    Email is required.
+                </div>
+                <div class="invalid-feedback" *ngIf="submitted && loginForm.get('email')?.errors?.['email']">
+                    Enter a valid email address.
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" formControlName="password"
+                    placeholder="Enter your password"
+                    [ngClass]="{'is-invalid': submitted && loginForm.get('password')?.invalid}" />
+                <div class="invalid-feedback" *ngIf="submitted && loginForm.get('password')?.errors?.['required']">
+                    Password is required.
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid">
+                <button type="submit" class="btn custom-btn">Login</button>
+            </div>
+
+            <!-- Error Message -->
+            <div class="alert alert-danger mt-3" *ngIf="loginError">
+                {{ loginError }}
+            </div>
+            <div class="alert alert-success mt-3" *ngIf="loginSuccess">
+                Login successful! Redirecting...
+            </div>
+        </form>
+    </div>
+</div>

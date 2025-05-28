@@ -18,4 +18,5 @@ public interface PatientService {
 
     List<PatientResponseDTO> searchPatients(String firstname,String lastname, String gender, String email, Long id, String contactNumber);
 
+    List<PatientResponseDTO> searchPatientsByQuery(String query);
 }

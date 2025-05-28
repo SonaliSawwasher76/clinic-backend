@@ -94,4 +94,14 @@ public class MedicalHistoryServiceImpl implements MedicalHistoryService {
         medicalHistoryRepository.delete(existing);
     }
 
+    @Override
+    public List<Long> getPatientsWithMedicalHistory() {
+        return medicalHistoryRepository.findAll()
+                .stream()
+                .map(medicalHistory -> medicalHistory.getPatient().getId())
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+
 }

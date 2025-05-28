@@ -1,0 +1,61 @@
+<div class="p-4 sidebar">
+  <h4 class="text-clinic-blue mb-4">{{ workspaceName }}</h4>
+
+  <nav>
+    <ul>
+      <li>
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">Dashboard Overview</a>
+      </li>
+
+      <li>
+        <div (click)="toggleSection('patientManagement')" class="section-header">
+          Patient Management
+          <span>{{ isSectionOpen.patientManagement ? '-' : '+' }}</span>
+        </div>
+        <ul *ngIf="isSectionOpen.patientManagement" class="submenu">
+          <li><a routerLink="/dashboard/admin/patients/add" routerLinkActive="active">Add New Patient</a></li>
+          <li><a routerLink="/dashboard/admin/patients" routerLinkActive="active">View All Patients</a></li>
+          <li><a routerLink="/dashboard/admin/patients/records" routerLinkActive="active">Patient Records</a></li>
+          <li><a routerLink="/dashboard/admin/patients/appointments" routerLinkActive="active">Patient Appointments</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <div (click)="toggleSection('appointmentManagement')" class="section-header">
+          Appointment Management
+          <span>{{ isSectionOpen.appointmentManagement ? '-' : '+' }}</span>
+        </div>
+        <ul *ngIf="isSectionOpen.appointmentManagement" class="submenu">
+          <li><a routerLink="/admin/appointments/schedule" routerLinkActive="active">Schedule Appointment</a></li>
+          <li><a routerLink="/admin/appointments/view" routerLinkActive="active">View Appointments</a></li>
+          <li><a routerLink="/admin/appointments/history" routerLinkActive="active">Appointment History</a></li>
+          <li><a routerLink="/admin/appointments/reminders" routerLinkActive="active">Appointment Reminders</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <div (click)="toggleSection('staffManagement')" class="section-header">
+          Staff Management
+          <span>{{ isSectionOpen.staffManagement ? '-' : '+' }}</span>
+        </div>
+        <ul *ngIf="isSectionOpen.staffManagement" class="submenu">
+          <li><a routerLink="/admin/staff/add" routerLinkActive="active">Add New Staff</a></li>
+          <li><a routerLink="/admin/staff/view" routerLinkActive="active">View All Staff</a></li>
+          <li><a routerLink="/admin/staff/roles" routerLinkActive="active">Staff Roles & Permissions</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <div (click)="toggleSection('billingInvoicing')" class="section-header">
+          Billing and Invoicing
+          <span>{{ isSectionOpen.billingInvoicing ? '-' : '+' }}</span>
+        </div>
+        <ul *ngIf="isSectionOpen.billingInvoicing" class="submenu">
+          <li><a routerLink="/admin/billing/create" routerLinkActive="active">Create Invoice</a></li>
+          <li><a routerLink="/admin/billing/view" routerLinkActive="active">View Invoices</a></li>
+          <li><a routerLink="/admin/billing/history" routerLinkActive="active">Payment History</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</div>

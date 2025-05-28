@@ -1,0 +1,216 @@
+<div class="p-4">
+
+  <!-- 👇 PATIENT RECORD TABLE -->
+  <div *ngIf="!showHistoryView && !showForm">
+    <h2 class="text-xl font-semibold mb-4">Patient Records</h2>
+
+    <table class="min-w-full border border-gray-300 rounded shadow">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2">Sr No</th>
+          <th class="px-4 py-2">Patient Name</th>
+          <th class="px-4 py-2">View History</th>
+          <th class="px-4 py-2">Medical History</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of patients; let i = index" class="border-t">
+          <td class="px-4 py-2">{{ i + 1 }}</td>
+          <td class="px-4 py-2">{{ patient.firstname }} {{ patient.lastname }}</td>
+          <td class="px-4 py-2">
+            <button
+              class="px-3 py-1 bg-blue-500 btn btn-info disabled:opacity-50"
+              [disabled]="!hasMedicalHistory(patient.id)"
+              (click)="viewHistory(patient)"
+            >
+              View
+            </button>
+          </td>
+          <td class="px-4 py-2">
+            <button
+              *ngIf="hasMedicalHistory(patient.id); else addBtn"
+              class="px-3 py-1 bg-yellow-500 btn btn-warning text-black rounded"
+              (click)="updateHistory(patient)"
+            >
+              Update
+            </button>
+            <ng-template #addBtn>
+              <button
+                class="px-3 py-1 bg-green-500 btn btn-warning text-black rounded"
+                (click)="addHistory(patient)"
+              >
+                Add
+              </button>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 👇 MEDICAL HISTORY VIEW -->
+  <div *ngIf="showHistoryView && !showForm">
+    <button
+      class="mb-4 px-3 py-1 bg-gray-400 btn custom-btn text-black rounded"
+      (click)="goBackToPatients()"
+    >
+      ← Back
+    </button>
+    <h3 class="text-lg font-bold mb-2">
+      Medical History for Patient ID: {{ selectedPatientId }}
+    </h3>
+    <br>
+    <br>
+
+    
+
+    <table class="min-w-full border border-gray-300 rounded shadow">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="px-4 py-2">Disease</th>
+          <th class="px-4 py-2">Diagnosis Date</th>
+          <th class="px-4 py-2">Treatment</th>
+          <th class="px-4 py-2">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let history of selectedPatientHistory" class="border-t">
+          <td class="px-4 py-2">{{ history.diseaseName }}</td>
+          <td class="px-4 py-2">{{ history.diagnosisDate }}</td>
+          <td class="px-4 py-2">{{ history.treatmentDetails }}</td>
+          <td class="px-4 py-2">{{ history.notes }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+ <!-- <div *ngIf="showForm" class="mt-6 p-4 border border-gray-300 rounded shadow bg-white max-w-md">
+  <h3 class="text-lg font-bold mb-4">{{ isEditMode ? 'Update Medical History' : 'Add Medical History' }}</h3>
+
+  <form [formGroup]="historyForm" (ngSubmit)="onSubmit()">
+    <div class="mb-4">
+      <label class="block font-semibold mb-4" for="diseaseName">Disease Name    <span class="text-red-600">*</span></label>
+      <input
+        id="diseaseName"
+        type="text"
+        formControlName="diseaseName"
+        class="w-full px-3 py-2 border rounded"
+        [class.border-red-500]="historyForm.get('diseaseName')?.invalid && historyForm.get('diseaseName')?.touched"
+      />
+      <div *ngIf="historyForm.get('diseaseName')?.invalid && historyForm.get('diseaseName')?.touched" class="text-red-600 text-sm mt-1">
+        Disease Name is required.
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-semibold mb-4" for="diagnosisDate">Diagnosis Date <span class="text-red-600">*</span></label>
+      <input
+        id="diagnosisDate"
+        type="date"
+        formControlName="diagnosisDate"
+        class="w-full mt-4 px-3 py-2 border rounded"
+        [class.border-red-500]="historyForm.get('diagnosisDate')?.invalid && historyForm.get('diagnosisDate')?.touched"
+      />
+      <div *ngIf="historyForm.get('diagnosisDate')?.invalid && historyForm.get('diagnosisDate')?.touched" class="text-red-600 text-sm mt-1">
+        Diagnosis Date is required.
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-semibold mb-1" for="treatmentDetails">Treatment Details</label>
+      <textarea
+        id="treatmentDetails"
+        formControlName="treatmentDetails"
+        rows="3"
+        class="w-full mt-4 px-3 py-2 border rounded"
+      ></textarea>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-semibold mb-3" for="notes">Notes</label>
+      <textarea
+        id="notes"
+        formControlName="notes"
+        rows="3"
+        class="w-full mt-4 px-3 py-2 border rounded"
+      ></textarea>
+    </div>
+
+    <div class="flex gap-3">
+      <button
+        type="submit"
+        class="px-4 py-2 bg-green-600  btn btn-warning rounded hover:bg-green-700 mr-3"
+      >
+        {{ isEditMode ? 'Update' : 'Add' }}
+      </button>
+      
+
+
+      <button
+        type="button"
+        (click)="cancelForm()"
+        class="px-4 py-2 bg-gray-400 text-white btn btn-danger rounded hover:bg-gray-500"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div> -->
+
+<div *ngIf="showForm" class="container mt-4">
+  <h3 class="mb-4">{{ isEditMode ? 'Update Medical History' : 'Add Medical History' }}</h3>
+
+  <!-- Success Alert -->
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ successMessage }}
+    <button type="button" class="btn-close" (click)="successMessage = null"></button>
+  </div>
+
+  <!-- Error Alert -->
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = null"></button>
+  </div>
+
+  <form [formGroup]="historyForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="diseaseName" class="form-label">Disease Name <span class="text-danger">*</span></label>
+        <input type="text" id="diseaseName" formControlName="diseaseName" class="form-control"
+               [class.is-invalid]="historyForm.get('diseaseName')?.invalid && historyForm.get('diseaseName')?.touched" />
+        <div class="invalid-feedback" *ngIf="historyForm.get('diseaseName')?.errors?.['required']">
+          Disease name is required.
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="diagnosisDate" class="form-label">Diagnosis Date <span class="text-danger">*</span></label>
+        <input type="date" id="diagnosisDate" formControlName="diagnosisDate" class="form-control"
+               [class.is-invalid]="historyForm.get('diagnosisDate')?.invalid && historyForm.get('diagnosisDate')?.touched" />
+        <div class="invalid-feedback" *ngIf="historyForm.get('diagnosisDate')?.errors?.['required']">
+          Diagnosis date is required.
+        </div>
+      </div>
+
+      <div class="col-12 mb-3">
+        <label for="treatmentDetails" class="form-label">Treatment Details</label>
+        <textarea id="treatmentDetails" formControlName="treatmentDetails" rows="3" class="form-control"></textarea>
+      </div>
+
+      <div class="col-12 mb-3">
+        <label for="notes" class="form-label">Notes</label>
+        <textarea id="notes" formControlName="notes" rows="3" class="form-control"></textarea>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-success">
+        {{ isEditMode ? 'Update' : 'Add' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancelForm()">Cancel</button>
+    </div>
+  </form>
+</div>
+
+
+</div>

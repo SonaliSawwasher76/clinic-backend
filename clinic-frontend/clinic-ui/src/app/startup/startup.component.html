@@ -1,0 +1,15 @@
+<div class="container-fluid startup-container d-flex justify-content-center align-items-center vh-100 text-center">
+  <div class="card shadow-lg p-5" style="border: none; background-color: white; max-width: 600px; width: 100%;">
+    <h1 class="mb-4 text-primary">Welcome to Clinic Management System</h1>
+    <p class="lead mb-5">Please choose how you'd like to get started:</p>
+
+    <div class="d-grid gap-3">
+      <button [routerLink]="['/create-workspace']" class="btn btn-outline-primary btn-lg">
+        <i class="bi bi-building-add me-2"></i> Create Workspace
+      </button>
+      <button [routerLink]="['/login']" class="btn btn-primary btn-lg">
+        <i class="bi bi-box-arrow-in-right me-2"></i> Login to System
+      </button>
+    </div>
+  </div>
+</div>

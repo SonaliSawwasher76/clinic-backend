@@ -12,6 +12,8 @@ public interface MedicalHistoryService {
     MedicalHistoryResponseDTO updateMedicalHistory(Long id, MedicalHistoryRequestDTO dto, String username);
 
     void deleteMedicalHistory(Long id, String username);
+    List<Long> getPatientsWithMedicalHistory();
+
 
 }
 

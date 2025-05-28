@@ -76,4 +76,28 @@ public class JwtUtil {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
+    // Refresh token validity: e.g., 7 days
+    private static final long REFRESH_TOKEN_VALIDITY = 1000 * 60 * 60 * 24 * 7;
+
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .subject(username)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public boolean isRefreshTokenValid(String token, String username) {
+        try {
+            final String extractedUsername = extractUsername(token);
+            return extractedUsername.equals(username) && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+
 }

@@ -1,7 +1,6 @@
 package com.clinic.config;
 
 import com.clinic.util.JwtUtil;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,34 +28,51 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String token = extractToken(request);
+        if (token == null || token.isBlank()) {
+            System.out.println("No Authorization token for request: " + request.getRequestURI());
+        } else {
+            System.out.println("Authorization token found for request: " + request.getRequestURI());
+        }
 
-        if (token != null) {
-            String username = jwtUtil.extractUsername(token);
-            String role = jwtUtil.extractRole(token);  // Extract role from JWT
+        if (token != null && !token.isBlank()) {
+            try {
+                String username = jwtUtil.extractUsername(token);
+                String role = jwtUtil.extractRole(token);  // Extract role from JWT
 
-            if (jwtUtil.isTokenValid(token, username)) {
+                if (jwtUtil.isTokenValid(token, username)) {
+                    // Convert role string to SimpleGrantedAuthority
+                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.toUpperCase());
 
-                // Convert role string to SimpleGrantedAuthority
-                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.toUpperCase());
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    username,
+                                    null,
+                                    Collections.singletonList(authority) // Set a user role here
+                            );
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                username,
-                                null,
-                                Collections.singletonList(authority) // Set user role here
-                        );
+                    System.out.println("Token username  = " + username);
+                    System.out.println("Token role      = " + role);
+                    System.out.println("Authority being set = ROLE_" + role.toUpperCase());
 
-                System.out.println("Token username  = " + username);
-                System.out.println("Token role      = " + role);
-                System.out.println("Authority being set = ROLE_" + role.toUpperCase());
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            } catch (Exception e) {
+                // Log invalid token error but don't block the request
+                System.out.println("Invalid JWT token: " + e.getMessage());
             }
         }
 
         filterChain.doFilter(request, response);
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/auth/login")
+                || path.startsWith("/api/auth/register")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs");
+    }
     // Helper to extract Bearer token from the request header
     private String extractToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");

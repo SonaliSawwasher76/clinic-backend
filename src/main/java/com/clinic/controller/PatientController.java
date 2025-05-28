@@ -2,6 +2,7 @@ package com.clinic.controller;
 
 import com.clinic.dto.Patient.PatientRequestDTO;
 import com.clinic.dto.Patient.PatientResponseDTO;
+//import com.clinic.repository.PatientRepository;
 import com.clinic.service.services.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 public class PatientController {
 
     private final PatientService patientService;
+   // private final PatientRepository patientRepository;
 
     // 🔐 Allow access to users with a role ADMIN or RECEPTIONIST
     @PreAuthorize("hasAnyRole('ADMIN','RECEPTIONIST')")
@@ -38,7 +40,7 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getPatientById(id));
     }
 
-    // 🔐 Allow access to users with role ADMIN or RECEPTIONIST only
+    // 🔐 Allow access to users with the role ADMIN or RECEPTIONIST only
     @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     @PutMapping("/{id}")
     public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable Long id, @RequestBody PatientRequestDTO requestDTO) {
@@ -66,5 +68,15 @@ public class PatientController {
         List<PatientResponseDTO> patients = patientService.searchPatients(firstname, lastname, gender, email, id, contactNumber);
         return ResponseEntity.ok(patients);
     }
+
+
+    @GetMapping("/search/general")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'STAFF')")
+    public ResponseEntity<List<PatientResponseDTO>> searchPatientsByQuery(@RequestParam("query") String query) {
+        List<PatientResponseDTO> patients = patientService.searchPatientsByQuery(query);
+        return ResponseEntity.ok(patients);
+    }
+
+
 
 }

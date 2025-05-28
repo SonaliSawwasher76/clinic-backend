@@ -1,9 +1,6 @@
 package com.clinic.service.impl;
 
-import com.clinic.dto.Auth.SignupRequestWrapperDTO;
-import com.clinic.dto.Auth.UserLoginRequestDTO;
-import com.clinic.dto.Auth.UserLoginResponseDTO;
-import com.clinic.dto.Auth.UserDetailsResponseDTO;
+import com.clinic.dto.Auth.*;
 import com.clinic.entity.Doctor;
 import com.clinic.entity.Workspace;
 import com.clinic.entity.user.User;
@@ -70,6 +67,9 @@ public class AuthServiceImpl implements AuthService {
        // profile.setUser(user); // Set UserProfile's user field
         user.setUserProfile(profile);
 
+        Doctor doctor1 = new Doctor();
+        doctor1.setYearsOfExperience(1);
+
         // Save the user and profile
         userRepository.save(user);
         auditLogService.logAction("User Registered", "Auth", "New user registered: " + dto.getUser().getEmail());
@@ -100,9 +100,10 @@ public class AuthServiceImpl implements AuthService {
             // Generate token here
            // String token = jwtUtil.generateToken(user.getEmail());
             String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+            String refreshToken = jwtUtil.generateRefreshToken(user.getEmail());
 
             // Return successful login response
-            return new UserLoginResponseDTO(token, user.getRole().name(), user.getUserId(), "Login successful");
+            return new UserLoginResponseDTO(token,refreshToken, user.getRole().name(), user.getUserId(), "Login successful",user.getUserProfile().getFirstName(),user.getWorkspace().getName());
         } else {
             throw new RuntimeException("Invalid credentials");
         }
@@ -143,6 +144,32 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return response;
+    }
+
+    @Override
+    public RefreshTokenResponseDTO refreshAccessToken(String refreshToken) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new RuntimeException("Refresh token is missing");
+        }
+
+        String username;
+        try {
+            username = jwtUtil.extractUsername(refreshToken);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid refresh token");
+        }
+
+        if (!jwtUtil.isRefreshTokenValid(refreshToken, username)) {
+            throw new RuntimeException("Refresh token is invalid or expired");
+        }
+
+        // You can fetch the user role from DB or from token claims if you store the role in a refresh token
+        String role = "USER"; // or fetch the actual role from DB
+
+        String newAccessToken = jwtUtil.generateToken(username, role);
+        String newRefreshToken = jwtUtil.generateRefreshToken(username);
+
+        return new RefreshTokenResponseDTO(newAccessToken, newRefreshToken);
     }
 
 

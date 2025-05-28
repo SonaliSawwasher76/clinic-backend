@@ -1,0 +1,86 @@
+<div class="container mt-4">
+  <h2 class="mb-4">{{ editMode ? 'Edit Patient' : 'Add New Patient' }}</h2>
+
+  <!-- Error Alert -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="firstname" class="form-label">First Name</label>
+        <input type="text" id="firstname" formControlName="firstname" class="form-control"
+               [class.is-invalid]="patientForm.get('firstname')?.invalid && patientForm.get('firstname')?.touched" />
+        <div class="invalid-feedback" *ngIf="patientForm.get('firstname')?.errors?.['required']">
+          First name is required.
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="lastname" class="form-label">Last Name</label>
+        <input type="text" id="lastname" formControlName="lastname" class="form-control"
+               [class.is-invalid]="patientForm.get('lastname')?.invalid && patientForm.get('lastname')?.touched" />
+        <div class="invalid-feedback" *ngIf="patientForm.get('lastname')?.errors?.['required']">
+          Last name is required.
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="dob" class="form-label">Date of Birth</label>
+        <input type="date" id="dob" formControlName="dob" class="form-control"
+               [class.is-invalid]="patientForm.get('dob')?.invalid && patientForm.get('dob')?.touched" />
+        <div class="invalid-feedback" *ngIf="patientForm.get('dob')?.errors?.['required']">
+          Date of birth is required.
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select id="gender" formControlName="gender" class="form-select"
+                [class.is-invalid]="patientForm.get('gender')?.invalid && patientForm.get('gender')?.touched">
+          <option value="" disabled>Select gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="patientForm.get('gender')?.errors?.['required']">
+          Gender is required.
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="contactNumber" class="form-label">Contact Number</label>
+        <input type="text" id="contactNumber" formControlName="contactNumber" class="form-control"
+               [class.is-invalid]="patientForm.get('contactNumber')?.invalid && patientForm.get('contactNumber')?.touched" />
+        <div class="invalid-feedback" *ngIf="patientForm.get('contactNumber')?.errors?.['required']">
+          Contact number is required.
+        </div>
+        <div class="invalid-feedback" *ngIf="patientForm.get('contactNumber')?.errors?.['pattern']">
+          Contact number must be 10 digits.
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" formControlName="email" class="form-control"
+               [class.is-invalid]="patientForm.get('email')?.invalid && patientForm.get('email')?.touched" />
+        <div class="invalid-feedback" *ngIf="patientForm.get('email')?.errors?.['required']">
+          Email is required.
+        </div>
+        <div class="invalid-feedback" *ngIf="patientForm.get('email')?.errors?.['email']">
+          Invalid email format.
+        </div>
+      </div>
+
+      <div class="col-12 mb-3">
+        <label for="address" class="form-label">Address</label>
+        <textarea id="address" formControlName="address" class="form-control" rows="3"></textarea>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Saving...' : (editMode ? 'Update Patient' : 'Add Patient') }}
+    </button>
+  </form>
+</div>

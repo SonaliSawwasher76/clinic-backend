@@ -2,6 +2,7 @@ package com.clinic.controller;
 
 import com.clinic.dto.Patient.MedicalHistoryRequestDTO;
 import com.clinic.dto.Patient.MedicalHistoryResponseDTO;
+import com.clinic.dto.Patient.PatientResponseDTO;
 import com.clinic.service.services.MedicalHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,5 +46,15 @@ public class MedicalHistoryController {
                                      @AuthenticationPrincipal String username) {
         medicalHistoryService.deleteMedicalHistory(id, username);
     }
+
+    @GetMapping("/patients-with-history")
+    @PreAuthorize("hasAnyRole('DOCTOR','ADMIN')")
+    public List<Long> getPatientsWithMedicalHistory() {
+        return medicalHistoryService.getPatientsWithMedicalHistory();
+    }
+
+
+
+
 
 }

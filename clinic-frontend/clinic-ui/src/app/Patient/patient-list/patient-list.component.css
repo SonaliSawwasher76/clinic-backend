@@ -1,0 +1,70 @@
+/* Clinic brand colors */
+:root {
+  --clinic-bluee: #007bff; /* adjust to your exact clinic blue */
+  --clinic-white: #ffffff;
+  --clinic-light-gray: #f8f9fa;
+}
+
+/* Table styles */
+.clinic-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+  background-color: var(--clinic-white);
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
+}
+
+.clinic-table-header {
+  background-color: var(--clinic-blue);
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 6px 6px 0 0;
+}
+
+.clinic-table-header th {
+  padding: 12px 15px;
+  vertical-align: middle;
+}
+
+.clinic-table-row {
+  background-color: var(--clinic-light-gray);
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.clinic-table-row:hover {
+  background-color: #e0f0ff;
+}
+
+.clinic-table-row td,
+.clinic-table-row th {
+  padding: 12px 15px;
+  vertical-align: middle;
+}
+
+/* Sr No cell styling */
+.index-cell {
+  color: var(--clinic-blue);
+  font-weight: 700;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* Actions cell - buttons side by side */
+.actions-cell {
+  white-space: nowrap;
+}
+
+.actions-cell button {
+  min-width: 70px;
+}
+
+/* Adjust spacing between buttons */
+.actions-cell button + button {
+  margin-left: 8px;
+}
+
+/* Optional: adjust input width */
+input.form-control.w-50 {
+  max-width: 400px;
+}
