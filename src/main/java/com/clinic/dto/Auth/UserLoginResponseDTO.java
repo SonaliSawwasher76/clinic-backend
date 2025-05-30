@@ -11,8 +11,9 @@ public class UserLoginResponseDTO {
     private String message;
     private String firstName;
     private String workspaceName;
+    private Long workspaceId;
 
-    public UserLoginResponseDTO(String token,String refreshToken, String role, Long userId, String message,String firstName,String workspaceName) {
+    public UserLoginResponseDTO(String token,String refreshToken, String role, Long userId, String message,String firstName,String workspaceName,Long workspaceId) {
         this.token = token;
         this.refreshToken = refreshToken;
         this.role = role;
@@ -20,6 +21,7 @@ public class UserLoginResponseDTO {
         this.message = message;
         this.firstName = firstName;
         this.workspaceName = workspaceName;
+        this.workspaceId = workspaceId;
     }
 }
 

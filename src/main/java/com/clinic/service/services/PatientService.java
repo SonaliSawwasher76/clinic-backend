@@ -14,6 +14,8 @@ public interface PatientService {
 
     PatientResponseDTO updatePatient(Long id, PatientRequestDTO patientRequestDTO);
 
+    List<PatientResponseDTO> getPatientsByWorkspaceId(Long workspaceId);
+
     void deletePatient(Long id);
 
     List<PatientResponseDTO> searchPatients(String firstname,String lastname, String gender, String email, Long id, String contactNumber);

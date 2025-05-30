@@ -71,12 +71,17 @@ public class PatientController {
 
 
     @GetMapping("/search/general")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR', 'RECEPTIONIST')")
     public ResponseEntity<List<PatientResponseDTO>> searchPatientsByQuery(@RequestParam("query") String query) {
         List<PatientResponseDTO> patients = patientService.searchPatientsByQuery(query);
         return ResponseEntity.ok(patients);
     }
 
+    @GetMapping("/workspace/{workspaceId}")
+    public ResponseEntity<List<PatientResponseDTO>> getPatientsByWorkspace(@PathVariable Long workspaceId) {
+        List<PatientResponseDTO> patients = patientService.getPatientsByWorkspaceId(workspaceId);
+        return ResponseEntity.ok(patients);
+    }
 
 
 }

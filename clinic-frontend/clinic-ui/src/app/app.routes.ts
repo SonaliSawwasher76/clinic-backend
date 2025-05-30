@@ -12,6 +12,9 @@ import { ReceptionistDashboardComponent } from './All Dashboard/receptionist-das
 import { AddPatientComponent } from './Patient/add-patient/add-patient.component';
 import { PatientListComponent } from './Patient/patient-list/patient-list.component';
 import { PatientsRecordComponent } from './Patient/patients-record/patients-record.component';
+import { AddStaffComponent } from './staff/add-staff/add-staff.component';
+import { StaffListComponent } from './staff/staff-list/staff-list.component';
+import { DoctorScheduleComponent } from './staff/doctor-schedule/doctor-schedule.component';
 
 
 export const routes: Routes = [
@@ -65,9 +68,33 @@ export const routes: Routes = [
             component: PatientsRecordComponent,
             canActivate: [AuthGuard],
             data: { roles: ['ADMIN'] }
-          }
-          
+          },
 
+          {
+            path: 'staff/addstaff',  
+            component: AddStaffComponent,
+            canActivate: [AuthGuard],
+            data: { roles: ['ADMIN'] }
+          },
+
+          {
+            path: 'staff/view',  
+            component: StaffListComponent,
+            canActivate: [AuthGuard],
+            data: { roles: ['ADMIN'] }
+          },
+
+          { path: 'staff/edit/:id', 
+            component: AddStaffComponent,
+            canActivate: [AuthGuard],
+            data: { roles: ['ADMIN'] } 
+          },
+
+          { path: 'staff/doctor_schedule', 
+            component: DoctorScheduleComponent,
+            canActivate: [AuthGuard],
+            data: { roles: ['ADMIN'] } 
+          },
         ]
       },
       {

@@ -28,6 +28,10 @@ export class PatientService {
   createPatient(patient: PatientRequest): Observable<PatientResponse> {
     return this.http.post<PatientResponse>(`${this.apiUrl}`, patient);
   }
+  getPatientsByWorkspace(workspaceId: number): Observable<PatientResponse[]> {
+  return this.http.get<PatientResponse[]>(`${this.apiUrl}/workspace/${workspaceId}`);
+}
+
 
   getAllPatients(): Observable<PatientResponse[]> {
     return this.http.get<PatientResponse[]>(this.apiUrl);

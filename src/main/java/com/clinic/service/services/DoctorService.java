@@ -23,6 +23,9 @@ public interface DoctorService {
     // Method to get all doctors
     List<DoctorResponseDTO> getAllDoctors();
 
+    List<DoctorResponseDTO> getDoctorsByWorkspace(String workspaceId);
+
+
     //List<DoctorResponseDTO> searchDoctors(DoctorSearchRequestDTO request);
     List<DoctorResponseDTO> searchDoctors(String firstName,
                                           String lastName,

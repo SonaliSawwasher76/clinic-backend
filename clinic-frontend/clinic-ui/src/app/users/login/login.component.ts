@@ -43,6 +43,7 @@ export class LoginComponent {
         localStorage.setItem('userId', res.userId.toString());
         localStorage.setItem('firstName', res.firstName);
         localStorage.setItem('workspaceName',res.workspaceName)
+        localStorage.setItem('workspaceId',res.workspaceId.toString())
         localStorage.setItem('refreshToken', res.refreshToken); 
 
         this.loginSuccess = true;

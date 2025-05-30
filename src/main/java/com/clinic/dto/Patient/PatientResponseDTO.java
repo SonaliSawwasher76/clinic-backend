@@ -19,4 +19,6 @@ public class PatientResponseDTO {
     private String email;
     private String address;
     private LocalDate dob;
+    private Long workspaceId;
+
 }

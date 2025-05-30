@@ -3,6 +3,7 @@ package com.clinic.mapper;
 import com.clinic.dto.Patient.PatientRequestDTO;
 import com.clinic.dto.Patient.PatientResponseDTO;
 import com.clinic.entity.Patient;
+import com.clinic.entity.Workspace;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,6 +23,7 @@ public class PatientMapper {
                 .contactNumber(patient.getContactNumber())
                 .address(patient.getAddress())
                 .email(patient.getEmail())  // Include email if needed
+                .workspaceId(patient.getWorkspace().getWorkspaceId())
                 .build();
     }
 
@@ -30,6 +32,8 @@ public class PatientMapper {
         if (patientRequestDTO == null) {
             return null;
         }
+        Workspace ws = new Workspace();
+        ws.setWorkspaceId(patientRequestDTO.getWorkspaceId());
         return Patient.builder()
                 .firstname(patientRequestDTO.getFirstname())
                 .lastname(patientRequestDTO.getLastname())
@@ -37,7 +41,8 @@ public class PatientMapper {
                 .gender(patientRequestDTO.getGender())
                 .contactNumber(patientRequestDTO.getContactNumber())
                 .address(patientRequestDTO.getAddress())
-                .email(patientRequestDTO.getEmail())  // Include email if needed
+                .email(patientRequestDTO.getEmail())
+                .workspace(ws)
                 .build();
     }
 }

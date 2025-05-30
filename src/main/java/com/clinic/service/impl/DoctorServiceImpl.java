@@ -276,6 +276,12 @@ public class DoctorServiceImpl implements DoctorService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<DoctorResponseDTO> getDoctorsByWorkspace(String workspaceId) {
+        List<Doctor> doctors = doctorRepository.findDoctorsByUserWorkSpaceId(workspaceId);
+        return doctorMapper.doctorListToDoctorResponseDTOList(doctors);
+    }
+
 
 
 }

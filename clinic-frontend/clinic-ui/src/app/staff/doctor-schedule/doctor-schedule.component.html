@@ -1,0 +1,79 @@
+<div class="container mt-4">
+  <h3>Doctor Scheduling</h3>
+
+  <!-- Doctor Table -->
+  <div *ngIf="!viewMode">
+    <table class="table table-bordered table-striped mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>Doctor Name</th>
+          <th>Email</th>
+          <th>View Schedules</th>
+          <th>Add/Update Schedules</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doctor of doctors">
+          <td>{{ doctor.firstName }} {{ doctor.lastName }}</td>
+          <td>{{ doctor.email }}</td>
+          <td>
+            <button class="btn btn-sm btn-primary"
+              [disabled]="!hasSchedule(doctor.doctorId)"
+
+              (click)="onViewSchedules(doctor)">
+              View
+            </button>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-success" (click)="onAddUpdateSchedules(doctor)">
+              {{ (doctorSchedulesMap[doctor.doctorId].length ) > 0 ? 'Update' : 'Add' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Schedule View -->
+  <div *ngIf="viewMode">
+    <button class="btn custom-btn mt-3" (click)="closeView()"><- Back</button>
+    <br>
+    <br>
+   
+    <h5>Schedules for {{ getDoctorName(selectedDoctorId) }}</h5>
+    <br>
+    
+
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Day of Week</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Appointment Duration (min)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let schedule of schedules">
+          <td>{{ schedule.dayOfWeek }}</td>
+          <td>{{ schedule.startTime }}</td>
+          <td>{{ schedule.endTime }}</td>
+          <td>{{ schedule.appointmentDurationMinutes }}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="onDeleteSchedule(schedule.id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="loadingSchedules" class="text-muted mt-3">Loading schedules...</div>
+
+    <div *ngIf="schedules.length === 0 && !loadingSchedules" class="alert alert-warning mt-3">
+      No schedules found for this doctor.
+    </div>
+
+  </div>
+</div>

@@ -3,6 +3,7 @@ package com.clinic.service.impl;
 import com.clinic.dto.Patient.PatientRequestDTO;
 import com.clinic.dto.Patient.PatientResponseDTO;
 import com.clinic.entity.Patient;
+import com.clinic.entity.Workspace;
 import com.clinic.exception.InvalidInputException;
 import com.clinic.exception.ResourceNotFoundException;
 import com.clinic.mapper.PatientMapper;
@@ -49,6 +50,8 @@ public class PatientServiceImpl implements PatientService {
         }
         // Validate the input data
         validatePatientInput(patientRequestDTO);
+
+
 
         // Convert the PatientRequestDTO to the Patient entity
         Patient patient = patientMapper.patientRequestDTOToPatient(patientRequestDTO);
@@ -260,4 +263,13 @@ public class PatientServiceImpl implements PatientService {
 
 
     }
+
+    @Override
+    public List<PatientResponseDTO> getPatientsByWorkspaceId(Long workspaceId) {
+        List<Patient> patients = patientRepository.findByWorkspace_WorkspaceId(workspaceId);
+        return patients.stream()
+                .map(patientMapper::patientToPatientResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }

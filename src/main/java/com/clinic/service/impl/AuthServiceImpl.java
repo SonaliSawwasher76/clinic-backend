@@ -103,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
             String refreshToken = jwtUtil.generateRefreshToken(user.getEmail());
 
             // Return successful login response
-            return new UserLoginResponseDTO(token,refreshToken, user.getRole().name(), user.getUserId(), "Login successful",user.getUserProfile().getFirstName(),user.getWorkspace().getName());
+            return new UserLoginResponseDTO(token,refreshToken, user.getRole().name(), user.getUserId(), "Login successful",user.getUserProfile().getFirstName(),user.getWorkspace().getName(),user.getWorkspace().getWorkspaceId());
         } else {
             throw new RuntimeException("Invalid credentials");
         }

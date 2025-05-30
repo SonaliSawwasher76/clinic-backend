@@ -16,6 +16,7 @@ export interface LoginResponse {
   message: string;
   firstName: string;
   workspaceName: string;
+  workspaceId:number;
 }
 
 export interface RefreshTokenResponse {
@@ -49,6 +50,7 @@ export class AuthService {
     localStorage.removeItem('role');
     localStorage.removeItem('workspaceName');
     localStorage.removeItem('token');
+    localStorage.removeItem('workspaceId');
     // Add routing to login page or reload app as needed
     window.location.href = '/login'; // Adjust route if your login is elsewhere
   }

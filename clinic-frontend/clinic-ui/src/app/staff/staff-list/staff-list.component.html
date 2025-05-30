@@ -1,0 +1,113 @@
+<div class="container mt-4">
+  <!-- Filters -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search staff..."
+        [(ngModel)]="searchText"
+        (input)="onFilterChange()"
+      />
+    </div>
+    <div class="col-md-4">
+      <select
+        class="form-select"
+        [(ngModel)]="selectedRole"
+        (change)="onFilterChange()"
+      >
+        <option value="all">All Staff</option>
+        <option value="doctor">Doctor</option>
+        <option value="receptionist">Receptionist</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Sr No.</th>
+          <th>Full Name</th>
+          <th>Role</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Contact No</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="staffList.length > 0; else noData">
+        <tr *ngFor="let staff of staffList; let i = index">
+          <td>{{ currentPage * 10 + i + 1 }}</td>
+          <td>{{ staff.firstName }} {{ staff.lastName }}</td>
+          <td>{{ staff.role }}</td>
+          <td>{{ staff.email }}</td>
+          <td>{{ staff.address }}</td>
+          <td>{{ staff.contactNo }}</td>
+          <td>
+            <button class="btn btn-sm btn-primary me-2" (click)="onEditStaff(staff.userId)">Edit</button>
+            <button class="btn btn-sm btn-danger" (click)="openDeleteModal(staff.userId, staff.firstName + ' ' + staff.lastName)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteStaffModal" tabindex="-1" aria-labelledby="deleteStaffModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-clinic-blue text-white">
+        <h5 class="modal-title" id="deleteStaffModalLabel">Confirm Deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete <strong>{{ selectedStaffName }}</strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- No Data -->
+  <ng-template #noData>
+    <tr>
+      <td colspan="7" class="text-center">No staff found.</td>
+    </tr>
+  </ng-template>
+
+  <!-- Pagination -->
+  <nav *ngIf="totalPages > 1" class="mt-3">
+    <ul class="pagination justify-content-center">
+      <li
+        class="page-item"
+        [class.disabled]="currentPage === 0"
+        (click)="goToPage(currentPage - 1)"
+      >
+        <a class="page-link">Previous</a>
+      </li>
+
+      <li
+        class="page-item"
+        *ngFor="let page of [].constructor(totalPages); let i = index"
+        [class.active]="i === currentPage"
+        (click)="goToPage(i)"
+      >
+        <a class="page-link">{{ i + 1 }}</a>
+      </li>
+
+      <li
+        class="page-item"
+        [class.disabled]="currentPage === totalPages - 1"
+        (click)="goToPage(currentPage + 1)"
+      >
+        <a class="page-link">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div>

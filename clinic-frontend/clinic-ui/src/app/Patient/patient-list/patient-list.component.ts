@@ -35,8 +35,20 @@ export class PatientListComponent implements OnInit {
   }
 
   loadPatients(): void {
-    this.patientService.getAllPatients().subscribe(data => {
-      this.patients = data;
+    const workspaceId = Number(localStorage.getItem('workspaceId'));
+    if (!workspaceId) {
+      this.patients = [];
+      return;
+    }
+
+    this.patientService.getPatientsByWorkspace(workspaceId).subscribe({
+      next: (data) => {
+        this.patients = data;
+      },
+      error: (err) => {
+        console.error('Failed to load patients for workspace:', err);
+        this.patients = [];
+      }
     });
   }
 

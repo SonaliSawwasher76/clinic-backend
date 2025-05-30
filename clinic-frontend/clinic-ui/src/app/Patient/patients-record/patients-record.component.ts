@@ -44,12 +44,27 @@ export class PatientsRecordComponent implements OnInit {
     this.loadPatients();
   }
 
+  // loadPatients() {
+  //   this.patientService.getAllPatients().subscribe(patients => {
+  //     this.patients = patients;
+  //     this.loadPatientsWithHistory();
+  //   });
+  // }
+
   loadPatients() {
-    this.patientService.getAllPatients().subscribe(patients => {
-      this.patients = patients;
-      this.loadPatientsWithHistory();
-    });
+  const workspaceId = localStorage.getItem('workspaceId');  // or get from a service if needed
+
+  if (!workspaceId) {
+    console.error("Workspace ID not found.");
+    return;
   }
+
+  this.patientService.getPatientsByWorkspace(Number(workspaceId)).subscribe(patients => {
+    this.patients = patients;
+    this.loadPatientsWithHistory();
+  });
+}
+
 
   loadPatientsWithHistory() {
     this.medicalHistoryService.getPatientsWithMedicalHistory().subscribe(ids => {

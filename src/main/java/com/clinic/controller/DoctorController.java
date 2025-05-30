@@ -66,6 +66,15 @@ public class DoctorController {
         return new ResponseEntity<>(doctorResponseDTOList, HttpStatus.OK);
     }
 
+
+    @PreAuthorize("hasAnyRole('ADMIN','RECEPTIONIST')")
+    @GetMapping("/workspace/{workspaceId}")
+    public ResponseEntity<List<DoctorResponseDTO>> getDoctorsByWorkspace(@PathVariable String workspaceId) {
+        List<DoctorResponseDTO> doctors = doctorService.getDoctorsByWorkspace(workspaceId);
+        return new ResponseEntity<>(doctors, HttpStatus.OK);
+    }
+
+
 //    @GetMapping("/search")
 //    @PreAuthorize("hasRole('ADMIN')")
 //    public ResponseEntity<List<DoctorResponseDTO>> searchDoctors(@ModelAttribute DoctorSearchRequestDTO request) {

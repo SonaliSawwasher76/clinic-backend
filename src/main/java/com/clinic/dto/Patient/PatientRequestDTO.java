@@ -1,5 +1,9 @@
 package com.clinic.dto.Patient;
 
+import com.clinic.entity.Workspace;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -35,6 +39,9 @@ public class PatientRequestDTO {
     private String email;
 
     private String address;
+    private Long workspaceId;
+
+
 
 //    public boolean isAgeValid() {
 //        if (dob == null) return false;

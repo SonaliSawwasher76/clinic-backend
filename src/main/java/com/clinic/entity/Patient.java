@@ -30,4 +30,8 @@ public class Patient {
 
     private String address;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workspace_id")  // This must match your DB column name
+    private Workspace workspace;
+
 }

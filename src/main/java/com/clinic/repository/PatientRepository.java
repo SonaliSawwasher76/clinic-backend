@@ -11,6 +11,8 @@ import java.util.Optional;
 
 public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpecificationExecutor<Patient> {
     Optional<Patient> findByEmail(String email);
+    List<Patient> findByWorkspace_WorkspaceId(Long workspaceId);
+
 
     @Query("SELECT p FROM Patient p WHERE " +
             "LOWER(p.firstname) LIKE LOWER(CONCAT('%', :query, '%')) OR " +

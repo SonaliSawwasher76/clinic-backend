@@ -76,7 +76,7 @@ export class AddPatientComponent implements OnInit {
 
     this.isSubmitting = true;
 
-    const patientData: PatientRequest = this.patientForm.value;
+    const patientData: PatientRequest = {...this.patientForm.value,workspaceId:Number(localStorage.getItem('workspaceId'))}
 
     if (this.editMode && this.patientId !== null) {
       this.patientService.updatePatient(this.patientId, patientData).subscribe({
